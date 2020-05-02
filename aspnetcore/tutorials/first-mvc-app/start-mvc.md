@@ -1,90 +1,321 @@
 ---
-title: Getting started with ASP.NET Core MVC and Visual Studio | Microsoft Docs
+title: Get started with ASP.NET Core MVC
 author: rick-anderson
-description: Getting started with ASP.NET Core MVC and Visual Studio
-keywords: ASP.NET Core, MVC
+description: Learn how to get started with ASP.NET Core MVC.
 ms.author: riande
-manager: wpickett
-ms.date: 03/07/2017
-ms.topic: article
-ms.assetid: 1d18b589-e3fd-4dc6-bde6-fb0f41998d78
-ms.technology: aspnet
-ms.prod: asp.net-core
+ms.date: 10/16/2019
 uid: tutorials/first-mvc-app/start-mvc
 ---
-# Getting started with ASP.NET Core MVC and Visual Studio
+# Get started with ASP.NET Core MVC
 
 By [Rick Anderson](https://twitter.com/RickAndMSFT)
 
-This tutorial will teach you the basics of building an ASP.NET Core MVC web app using [Visual Studio 2017](https://www.visualstudio.com/).
+::: moniker range=">= aspnetcore-3.0"
 
-> [!NOTE]
-> See [Your First ASP.NET Core Application on a Mac Using Visual Studio Code](../your-first-mac-aspnet.md) for a Mac tutorial.
+[!INCLUDE [consider RP](~/includes/razor.md)]
 
-For the Visual Studio 2015 version of this tutorial, see the [VS 2015 version of ASP.NET Core documentation in PDF format](https://github.com/aspnet/Docs/blob/master/aspnetcore/common/_static/aspnet-core-project-json.pdf).
+This tutorial teaches the basics of building an ASP.NET Core MVC web app.
 
-## Install Visual Studio and .NET Core
+The app manages a database of movie titles. You learn how to:
 
-Install Visual Studio Community 2017. Select the Community download. Skip this step if you have Visual Studio 2017 installed.
+> [!div class="checklist"]
+> * Create a web app.
+> * Add and scaffold a model.
+> * Work with a database.
+> * Add search and validation.
 
-  * [Visual Studio 2017 Home page installer](https://www.visualstudio.com/en-us/visual-studio-homepage-vs.aspx)
+At the end, you have an app that can manage and display movie data.
 
-Run the installer and select the following workloads:
- - **ASP.NET and web development** (under **Web & Cloud**)
- - **.NET Core cross-platform development** (under **Other Toolsets**)
+[!INCLUDE[](~/includes/mvc-intro/download.md)]
 
-![**ASP.NET and web development** (under **Web & Cloud**)](start-mvc/_static/web_workload.png)
+## Prerequisites
 
-![**.NET Core cross-cross-platfrom development** (under **Other Toolsets**)](start-mvc/_static/x_plat_wl.png)
+# [Visual Studio](#tab/visual-studio)
 
+[!INCLUDE[](~/includes/net-core-prereqs-vs-3.1.md)]
+
+# [Visual Studio Code](#tab/visual-studio-code)
+
+[!INCLUDE[](~/includes/net-core-prereqs-vsc-3.1.md)]
+
+# [Visual Studio for Mac](#tab/visual-studio-mac)
+
+[!INCLUDE[](~/includes/net-core-prereqs-mac-3.1.md)]
+
+---
 
 ## Create a web app
 
-From Visual Studio, select  **File > New > Project**.
+# [Visual Studio](#tab/visual-studio)
 
-![File > New > Project](start-mvc/_static/alt_new_project.png)
+* From the Visual Studio select **Create a new project**.
 
-Complete the **New Project** dialog:
+* Select **ASP.NET Core Web Application** and then select **Next**.
 
-* In the left pane, tap **.NET Core**
-* In the center pane, tap **ASP.NET Core Web Application (.NET Core)**
-* Name the project "MvcMovie" (It's important to name the project "MvcMovie" so when you copy code, the namespace will match.)
-* Tap **OK**
+![new ASP.NET Core Web Application](start-mvc/_static/np_2.1.png)
 
-![New project dialog, .Net core in left pane, ASP.NET Core web ](start-mvc/_static/new_project2.png)
+* Name the project **MvcMovie** and select **Create**. It's important to name the project **MvcMovie** so when you copy code, the namespace will match.
 
-Complete the **New ASP.NET Core Web Application (.NET Core) - MvcMovie** dialog:
+  ![new ASP.NET Core Web Application](start-mvc/_static/config.png)
 
-* In the version selector drop-down box tap **ASP.NET Core 1.1**
-* Tap **Web Application**
-* Keep the default **No Authentication**
-* Tap **OK**.
+* Select **Web Application(Model-View-Controller)**, and then select **Create**.
 
-![New ASP.NET Core web app](start-mvc/_static/p3.png)
+![New project dialog, .NET Core in left pane, ASP.NET Core web ](start-mvc/_static/new_project30.png)
 
-Visual Studio used a default template for the MVC project you just created. You have a working app right now by entering a project name and selecting a few options. This is a simple starter project, and it's a good place to start,
+Visual Studio used the default template for the MVC project you just created. You have a working app right now by entering a project name and selecting a few options. This is a basic starter project.
 
-Tap **F5** to run the app in debug mode or **Ctrl-F5** in non-debug mode.
-<!-- These images are also used by uid: tutorials/first-mvc-app-xplat/start-mvc -->
-![running app](start-mvc/_static/1.png)
+# [Visual Studio Code](#tab/visual-studio-code)
 
-* Visual Studio starts [IIS Express](http://www.iis.net/learn/extensions/introduction-to-iis-express/iis-express-overview) and runs your app. Notice that the address bar shows `localhost:port#` and not something like `example.com`. That's because `localhost` is the standard hostname for your local computer. When Visual Studio creates a web project, a random port is used for the web server. In the image above, the port number is 5000. When you run the app, you'll see a different port number.
-* Launching the app with **Ctrl+F5** (non-debug mode) allows you to make code changes, save the file, refresh the browser, and see the code changes. Many developers prefer to use non-debug mode to quickly launch the app and view changes.
+The tutorial assumes familarity with VS Code. See [Getting started with VS Code](https://code.visualstudio.com/docs) and [Visual Studio Code help](#visual-studio-code-help) for more information.
+
+* Open the [integrated terminal](https://code.visualstudio.com/docs/editor/integrated-terminal).
+* Change directories (`cd`) to a folder which will contain the project.
+* Run the following command:
+
+   ```dotnetcli
+   dotnet new mvc -o MvcMovie
+   code -r MvcMovie
+   ```
+
+  * A dialog box appears with **Required assets to build and debug are missing from 'MvcMovie'. Add them?**  Select **Yes**
+
+  * `dotnet new mvc -o MvcMovie`: creates a new ASP.NET Core MVC project in the *MvcMovie* folder.
+  * `code -r MvcMovie`: Loads the *MvcMovie.csproj* project file in Visual Studio Code.
+
+# [Visual Studio for Mac](#tab/visual-studio-mac)
+
+* Select **File** > **New Solution**.
+
+  ![macOS New solution](./start-mvc/_static/new_project_vsmac.png)
+
+* Select **.NET Core** > **App** > **Web Application (Model-View-Controller)** > **Next**.
+
+  ![macOS New project dialog](./start-mvc/_static/new_project_mvc_vsmac.png)
+
+* In the **Configure your new ASP.NET Core Web API** dialog, set the  **Target Framework** of **.NET Core 3.1**.
+
+  ![macOS .NET Core 3.1 selection](./start-mvc/_static/new_project_31_vsmac.png)
+
+* Name the project **MvcMovie**, and then select **Create**.
+
+---
+
+### Run the app
+
+# [Visual Studio](#tab/visual-studio)
+
+Select **Ctrl-F5** to run the app in non-debug mode.
+
+[!INCLUDE[](~/includes/trustCertVS.md)]
+
+* Visual Studio starts [IIS Express](/iis/extensions/introduction-to-iis-express/iis-express-overview) and runs the app. Notice that the address bar shows `localhost:port#` and not something like `example.com`. That's because `localhost` is the standard hostname for your local computer. When Visual Studio creates a web project, a random port is used for the web server.
+* Launching the app with Ctrl+F5 (non-debug mode) allows you to make code changes, save the file, refresh the browser, and see the code changes. Many developers prefer to use non-debug mode to quickly launch the app and view changes.
 * You can launch the app in debug or non-debug mode from the **Debug** menu item:
 
-![Debug menu](start-mvc/_static/debug_menu.png)
+  ![Debug menu](start-mvc/_static/debug_menu.png)
 
-* You can debug the app by tapping the **IIS Express** button
+* You can debug the app by selecting the **IIS Express** button
 
-![IIS Express](start-mvc/_static/iis_express.png)
+  ![IIS Express](start-mvc/_static/iis_express.png)
 
-The default template gives you working **Home, About** and **Contact** links. The browser image above doesn't show these links. Depending on the size of your browser, you might need to click the navigation icon to show them.
+  The following image shows the app:
 
-![navigation icon in upper right](start-mvc/_static/2.png)
+  ![Home or Index page](start-mvc/_static/home2.2.png)
 
-If you were running in debug mode, tap **Shift-F5** to stop debugging.
+# [Visual Studio Code](#tab/visual-studio-code)
 
-In the next part of this tutorial, we'll learn about MVC and start writing some code.
+Press Ctrl+F5 to run without the debugger.
 
->[!div class="step-by-step"]
-[Next](adding-controller.md)  
+[!INCLUDE[](~/includes/trustCertVSC.md)]
+
+  Visual Studio Code starts [Kestrel](xref:fundamentals/servers/kestrel), launches a browser, and navigates to `https://localhost:5001`. The address bar shows `localhost:port:5001` and not something like `example.com`. That's because `localhost` is the standard hostname for  local computer. Localhost only serves web requests from the local computer.
+
+  Launching the app with Ctrl+F5 (non-debug mode) allows you to make code changes, save the file, refresh the browser, and see the code changes. Many developers prefer to use non-debug mode to refresh the page and view changes.
+
+  ![Home or Index page](start-mvc/_static/home2.2.png)
+
+# [Visual Studio for Mac](#tab/visual-studio-mac)
+
+Select **Run** > **Start Without Debugging** to launch the app. Visual Studio for Mac starts [Kestrel](xref:fundamentals/servers/index#kestrel) server, launches a browser, and navigates to `http://localhost:port`, where *port* is a randomly chosen port number.
+
+[!INCLUDE[](~/includes/trustCertMac.md)]
+
+* The address bar shows `localhost:port#` and not something like `example.com`. That's because `localhost` is the standard hostname for your local computer. When Visual Studio creates a web project, a random port is used for the web server. When you run the app, you'll see a different port number.
+* You can launch the app in debug or non-debug mode from the **Run** menu.
+
+  The following image shows the app:
+
+  ![Home or Index page](./start-mvc/_static/output_macos.png)
+
+---
+
+[!INCLUDE[](~/includes/vs-vsc-vsmac-help.md)]
+
+In the next part of this tutorial, you learn about MVC and start writing some code.
+
+> [!div class="step-by-step"]
+> [Next](adding-controller.md)
+
+::: moniker-end
+
+::: moniker range="< aspnetcore-3.0"
+
+[!INCLUDE [consider RP](~/includes/razor.md)]
+
+This tutorial teaches the basics of building an ASP.NET Core MVC web app.
+
+The app manages a database of movie titles. You learn how to:
+
+> [!div class="checklist"]
+> * Create a web app.
+> * Add and scaffold a model.
+> * Work with a database.
+> * Add search and validation.
+
+At the end, you have an app that can manage and display movie data.
+
+[!INCLUDE[](~/includes/mvc-intro/download.md)]
+
+## Prerequisites
+
+# [Visual Studio](#tab/visual-studio)
+
+[!INCLUDE[](~/includes/net-core-prereqs-vs2019-2.2.md)]
+
+# [Visual Studio Code](#tab/visual-studio-code)
+
+[!INCLUDE[](~/includes/net-core-prereqs-vsc-2.2.md)]
+
+# [Visual Studio for Mac](#tab/visual-studio-mac)
+
+[!INCLUDE[](~/includes/net-core-prereqs-mac-2.2.md)]
+
+---
+## Create a web app
+
+# [Visual Studio](#tab/visual-studio)
+
+* From the Visual Studio select **Create a new project**.
+
+* Select **ASP.NET Core Web Application** and then select **Next**.
+
+![new ASP.NET Core Web Application](start-mvc/_static/np_2.1.png)
+
+* Name the project **MvcMovie** and select **Create**. It's important to name the project **MvcMovie** so when you copy code, the namespace will match.
+
+  ![new ASP.NET Core Web Application](start-mvc/_static/config.png)
+
+
+* Select **Web Application(Model-View-Controller)**, and then select **Create**.
+
+![New project dialog, .NET Core in left pane, ASP.NET Core web ](start-mvc/_static/new_project22-21.png)
+
+Visual Studio used the default template for the MVC project you just created. You have a working app right now by entering a project name and selecting a few options. This is a basic starter project, and it's a good place to start.
+
+# [Visual Studio Code](#tab/visual-studio-code)
+
+The tutorial assumes familarity with VS Code. See [Getting started with VS Code](https://code.visualstudio.com/docs) and [Visual Studio Code help](#visual-studio-code-help) for more information.
+
+* Open the [integrated terminal](https://code.visualstudio.com/docs/editor/integrated-terminal).
+* Change directories (`cd`) to a folder which will contain the project.
+* Run the following command:
+
+   ```dotnetcli
+   dotnet new mvc -o MvcMovie
+   code -r MvcMovie
+   ```
+
+  * A dialog box appears with **Required assets to build and debug are missing from 'MvcMovie'. Add them?**  Select **Yes**
+
+  * `dotnet new mvc -o MvcMovie`: creates a new ASP.NET Core MVC project in the *MvcMovie* folder.
+  * `code -r MvcMovie`: Loads the *MvcMovie.csproj* project file in Visual Studio Code.
+
+# [Visual Studio for Mac](#tab/visual-studio-mac)
+
+* Select **File** > **New Solution**.
+
+  ![macOS New solution](./start-mvc/_static/new_project_vsmac.png)
+
+* Select **.NET Core** > **App** > **Web Application (Model-View-Controller)** > **Next**.
+
+  ![macOS New project dialog](./start-mvc/_static/new_project_mvc_vsmac.png)
+
+* In the **Configure your new ASP.NET Core Web API** dialog, accept the default **Target Framework** of **.NET Core 2.2**.
+
+  ![macOS .NET Core 2.2 selection](./start-mvc/_static/new_project_22_vsmac.png)
+
+* Name the project **MvcMovie**, and then select **Create**.
+
+---
+
+### Run the app
+
+# [Visual Studio](#tab/visual-studio)
+
+Select **Ctrl-F5** to run the app in non-debug mode.
+
+[!INCLUDE[](~/includes/trustCertVS.md)]
+
+* Visual Studio starts [IIS Express](/iis/extensions/introduction-to-iis-express/iis-express-overview) and runs the app. Notice that the address bar shows `localhost:port#` and not something like `example.com`. That's because `localhost` is the standard hostname for your local computer. When Visual Studio creates a web project, a random port is used for the web server.
+* Launching the app with Ctrl+F5 (non-debug mode) allows you to make code changes, save the file, refresh the browser, and see the code changes. Many developers prefer to use non-debug mode to quickly launch the app and view changes.
+* You can launch the app in debug or non-debug mode from the **Debug** menu item:
+
+  ![Debug menu](start-mvc/_static/debug_menu.png)
+
+* You can debug the app by selecting the **IIS Express** button
+
+  ![IIS Express](start-mvc/_static/iis_express.png)
+
+* Select **Accept** to consent to tracking. This app doesn't track personal information. The template generated code includes assets to help meet [General Data Protection Regulation (GDPR)](xref:security/gdpr).
+
+  ![Home or Index page](start-mvc/_static/privacy.png)
+
+  The following image shows the app after accepting tracking:
+
+  ![Home or Index page](start-mvc/_static/home2.2.png)
+
+# [Visual Studio Code](#tab/visual-studio-code)
+
+Press Ctrl+F5 to run without the debugger.
+
+[!INCLUDE[](~/includes/trustCertVSC.md)]
+
+  Visual Studio Code starts [Kestrel](xref:fundamentals/servers/kestrel), launches a browser, and navigates to `https://localhost:5001`. The address bar shows `localhost:port:5001` and not something like `example.com`. That's because `localhost` is the standard hostname for  local computer. Localhost only serves web requests from the local computer.
+
+  Launching the app with Ctrl+F5 (non-debug mode) allows you to make code changes, save the file, refresh the browser, and see the code changes. Many developers prefer to use non-debug mode to refresh the page and view changes.
+
+* Select **Accept** to consent to tracking. This app doesn't track personal information. The template generated code includes assets to help meet [General Data Protection Regulation (GDPR)](xref:security/gdpr).
+
+  ![Home or Index page](start-mvc/_static/privacy.png)
+
+  The following image shows the app after accepting tracking:
+
+  ![Home or Index page](start-mvc/_static/home2.2.png)
+
+# [Visual Studio for Mac](#tab/visual-studio-mac)
+
+Select **Run** > **Start Without Debugging** to launch the app. Visual Studio for Mac starts [Kestrel](xref:fundamentals/servers/index#kestrel) server, launches a browser, and navigates to `http://localhost:port`, where *port* is a randomly chosen port number.
+
+[!INCLUDE[](~/includes/trustCertMac.md)]
+
+* The address bar shows `localhost:port#` and not something like `example.com`. That's because `localhost` is the standard hostname for your local computer. When Visual Studio creates a web project, a random port is used for the web server. When you run the app, you'll see a different port number.
+* You can launch the app in debug or non-debug mode from the **Run** menu.
+
+* Select **Accept** to consent to tracking. This app doesn't track personal information. The template generated code includes assets to help meet [General Data Protection Regulation (GDPR)](xref:security/gdpr).
+
+  ![Home or Index page](./start-mvc/_static/output_privacy_macos.png)
+
+  The following image shows the app after accepting tracking:
+
+  ![Home or Index page](./start-mvc/_static/output_macos.png)
+
+---
+
+[!INCLUDE[](~/includes/vs-vsc-vsmac-help.md)]
+
+In the next part of this tutorial, you learn about MVC and start writing some code.
+
+> [!div class="step-by-step"]
+> [Next](adding-controller.md)
+
+::: moniker-end

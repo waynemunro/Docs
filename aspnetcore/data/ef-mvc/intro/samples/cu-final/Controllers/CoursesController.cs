@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,7 +16,7 @@ namespace ContosoUniversity.Controllers
 
         public CoursesController(SchoolContext context)
         {
-            _context = context;    
+            _context = context;
         }
 
         // GET: Courses
@@ -39,7 +39,7 @@ namespace ContosoUniversity.Controllers
             var course = await _context.Courses
                 .Include(c => c.Department)
                 .AsNoTracking()
-                .SingleOrDefaultAsync(m => m.CourseID == id);
+                .FirstOrDefaultAsync(m => m.CourseID == id);
             if (course == null)
             {
                 return NotFound();
@@ -66,7 +66,7 @@ namespace ContosoUniversity.Controllers
             {
                 _context.Add(course);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Index");
+                return RedirectToAction(nameof(Index));
             }
             PopulateDepartmentsDropDownList(course.DepartmentID);
             return View(course);
@@ -82,7 +82,7 @@ namespace ContosoUniversity.Controllers
 
             var course = await _context.Courses
                 .AsNoTracking()
-                .SingleOrDefaultAsync(m => m.CourseID == id);
+                .FirstOrDefaultAsync(m => m.CourseID == id);
             if (course == null)
             {
                 return NotFound();
@@ -104,7 +104,7 @@ namespace ContosoUniversity.Controllers
             }
 
             var courseToUpdate = await _context.Courses
-                .SingleOrDefaultAsync(c => c.CourseID == id);
+                .FirstOrDefaultAsync(c => c.CourseID == id);
 
             if (await TryUpdateModelAsync<Course>(courseToUpdate,
                 "",
@@ -121,7 +121,7 @@ namespace ContosoUniversity.Controllers
                         "Try again, and if the problem persists, " +
                         "see your system administrator.");
                 }
-                return RedirectToAction("Index");
+                return RedirectToAction(nameof(Index));
             }
             PopulateDepartmentsDropDownList(courseToUpdate.DepartmentID);
             return View(courseToUpdate);
@@ -146,7 +146,7 @@ namespace ContosoUniversity.Controllers
             var course = await _context.Courses
                 .Include(c => c.Department)
                 .AsNoTracking()
-                .SingleOrDefaultAsync(m => m.CourseID == id);
+                .FirstOrDefaultAsync(m => m.CourseID == id);
             if (course == null)
             {
                 return NotFound();
@@ -160,22 +160,16 @@ namespace ContosoUniversity.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var course = await _context.Courses.SingleOrDefaultAsync(m => m.CourseID == id);
+            var course = await _context.Courses.FindAsync(id);
             _context.Courses.Remove(course);
             await _context.SaveChangesAsync();
-            return RedirectToAction("Index");
-        }
-
-        private bool CourseExists(int id)
-        {
-            return _context.Courses.Any(e => e.CourseID == id);
+            return RedirectToAction(nameof(Index));
         }
 
         public IActionResult UpdateCourseCredits()
         {
             return View();
         }
-
 
         [HttpPost]
         public async Task<IActionResult> UpdateCourseCredits(int? multiplier)
@@ -190,5 +184,9 @@ namespace ContosoUniversity.Controllers
             return View();
         }
 
+        private bool CourseExists(int id)
+        {
+            return _context.Courses.Any(e => e.CourseID == id);
+        }
     }
 }

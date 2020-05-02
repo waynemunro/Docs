@@ -1,43 +1,37 @@
 ---
-title: Examining the Details and Delete methods | Microsoft Docs
+title: Examine the Details and Delete methods of an ASP.NET Core app
 author: rick-anderson
-description: The Details controller method and view in a simple ASP.NET Core MVC app.
-keywords: ASP.NET Core,
+description: Learn about the Details controller method and view in a basic ASP.NET Core MVC app.
 ms.author: riande
-manager: wpickett
-ms.date: 03/07/2017
-ms.topic: article
-ms.assetid: 870192b4-8d4f-45c7-8c14-83d02bc0ad79
-ms.technology: aspnet
-ms.prod: asp.net-core
+ms.date: 12/13/2018
 uid: tutorials/first-mvc-app/details
 ---
-# Examining the Details and Delete methods
+
+# Examine the Details and Delete methods of an ASP.NET Core app
 
 By [Rick Anderson](https://twitter.com/RickAndMSFT)
 
 Open the Movie controller and examine the `Details` method:
 
-[!code-csharp[Main](start-mvc/sample/MvcMovie/Controllers/MoviesController.cs?name=snippet_details)]
+[!code-csharp[](start-mvc/sample/MvcMovie22/Controllers/MoviesController.cs?name=snippet_details)]
 
-The MVC scaffolding engine that created this action method adds a comment showing an HTTP request that invokes the method. In this case it's a GET request with three URL segments, the `Movies` controller, the `Details` method and an `id` value. Recall these segments are defined in *Startup.cs*.
+The MVC scaffolding engine that created this action method adds a comment showing an HTTP request that invokes the method. In this case it's a GET request with three URL segments, the `Movies` controller, the `Details` method, and an `id` value. Recall these segments are defined in *Startup.cs*.
 
-[!code-csharp[Main](start-mvc/sample/MvcMovie/Startup.cs?highlight=5&name=snippet_1)]
+[!code-csharp[](start-mvc/sample/MvcMovie3/Startup.cs?highlight=5&name=snippet_1)]
 
-EF makes it easy to search for data using the `SingleOrDefaultAsync` method. An important security feature built into the method is that the code verifies that the search method has found a movie before it tries to do anything with it. For example, a hacker could introduce errors into the site by changing the URL created by the links from `http://localhost:xxxx/Movies/Details/1` to something like  `http://localhost:xxxx/Movies/Details/12345` (or some other value that doesn't represent an actual movie). If you did not check for a null movie, the app would throw an exception.
+EF makes it easy to search for data using the `FirstOrDefaultAsync` method. An important security feature built into the method is that the code verifies that the search method has found a movie before it tries to do anything with it. For example, a hacker could introduce errors into the site by changing the URL created by the links from `http://localhost:{PORT}/Movies/Details/1` to something like  `http://localhost:{PORT}/Movies/Details/12345` (or some other value that doesn't represent an actual movie). If you didn't check for a null movie, the app would throw an exception.
 
 Examine the `Delete` and `DeleteConfirmed` methods.
 
-[!code-csharp[Main](start-mvc/sample/MvcMovie/Controllers/MoviesController.cs?name=snippet_delete)]
+[!code-csharp[](start-mvc/sample/MvcMovie22/Controllers/MoviesController.cs?name=snippet_delete)]
 
 Note that the `HTTP GET Delete` method doesn't delete the specified movie, it returns a view of the movie where you can submit (HttpPost) the deletion. Performing a delete operation in response to a GET request (or for that matter, performing an edit operation, create operation, or any other operation that changes data) opens up a security hole.
 
 The `[HttpPost]` method that deletes the data is named `DeleteConfirmed` to give the HTTP POST method a unique signature or name. The two method signatures are shown below:
 
-[!code-csharp[Main](start-mvc/sample/MvcMovie/Controllers/MoviesController.cs?name=snippet_delete2)]
+[!code-csharp[](start-mvc/sample/MvcMovie/Controllers/MoviesController.cs?name=snippet_delete2)]
 
-[!code-csharp[Main](start-mvc/sample/MvcMovie/Controllers/MoviesController.cs?name=snippet_delete3)]
-
+[!code-csharp[](start-mvc/sample/MvcMovie/Controllers/MoviesController.cs?name=snippet_delete3)]
 
 The common language runtime (CLR) requires overloaded methods to have a unique parameter signature (same method name but different list of parameters). However, here you need two `Delete` methods -- one for GET and one for POST -- that both have the same parameter signature. (They both need to accept a single integer as a parameter.)
 
@@ -47,11 +41,14 @@ Another common work around for methods that have identical names and signatures 
 
 ```csharp
 // POST: Movies/Delete/6
+[HttpPost]
 [ValidateAntiForgeryToken]
 public async Task<IActionResult> Delete(int id, bool notUsed)
 ```
 
-Thanks for completing this introduction to ASP.NET Core MVC. We appreciate any comments you leave. [Getting started with MVC and EF Core](xref:data/ef-mvc/intro) is an excellent follow up to this tutorial.
+### Publish to Azure
 
->[!div class="step-by-step"]
-[Previous](validation.md)
+For information on deploying to Azure, see [Tutorial: Build a .NET Core and SQL Database web app in Azure App Service](/azure/app-service/app-service-web-tutorial-dotnetcore-sqldb).
+
+> [!div class="step-by-step"]
+> [Previous](validation.md)

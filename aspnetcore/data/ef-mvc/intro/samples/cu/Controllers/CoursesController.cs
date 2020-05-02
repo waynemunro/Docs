@@ -54,7 +54,7 @@ namespace ContosoUniversity.Controllers
             var course = await _context.Courses
                 .Include(c => c.Department)
                 .AsNoTracking()
-                .SingleOrDefaultAsync(m => m.CourseID == id);
+                .FirstOrDefaultAsync(m => m.CourseID == id);
             if (course == null)
             {
                 return NotFound();
@@ -82,7 +82,7 @@ namespace ContosoUniversity.Controllers
             {
                 _context.Add(course);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Index");
+                return RedirectToAction(nameof(Index));
             }
             PopulateDepartmentsDropDownList(course.DepartmentID);
             return View(course);
@@ -100,7 +100,7 @@ namespace ContosoUniversity.Controllers
 
             var course = await _context.Courses
                 .AsNoTracking()
-                .SingleOrDefaultAsync(m => m.CourseID == id);
+                .FirstOrDefaultAsync(m => m.CourseID == id);
             if (course == null)
             {
                 return NotFound();
@@ -123,7 +123,7 @@ namespace ContosoUniversity.Controllers
             }
 
             var courseToUpdate = await _context.Courses
-                .SingleOrDefaultAsync(c => c.CourseID == id);
+                .FirstOrDefaultAsync(c => c.CourseID == id);
 
             if (await TryUpdateModelAsync<Course>(courseToUpdate,
                 "",
@@ -140,7 +140,7 @@ namespace ContosoUniversity.Controllers
                         "Try again, and if the problem persists, " +
                         "see your system administrator.");
                 }
-                return RedirectToAction("Index");
+                return RedirectToAction(nameof(Index));
             }
             PopulateDepartmentsDropDownList(courseToUpdate.DepartmentID);
             return View(courseToUpdate);
@@ -169,7 +169,7 @@ namespace ContosoUniversity.Controllers
             var course = await _context.Courses
                 .Include(c => c.Department)
                 .AsNoTracking()
-                .SingleOrDefaultAsync(m => m.CourseID == id);
+                .FirstOrDefaultAsync(m => m.CourseID == id);
             if (course == null)
             {
                 return NotFound();
@@ -185,13 +185,13 @@ namespace ContosoUniversity.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var course = await _context.Courses
-                .SingleOrDefaultAsync(m => m.CourseID == id);
+                .FirstOrDefaultAsync(m => m.CourseID == id);
             if (course != null)
             {
                 _context.Courses.Remove(course);
                 await _context.SaveChangesAsync();
             }
-            return RedirectToAction("Index");
+            return RedirectToAction(nameof(Index));
         }
 
         #region snippet_UpdateGet

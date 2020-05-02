@@ -1,0 +1,22 @@
+@page "/customer-list"
+@using Services
+@inject IDataAccess DataRepository
+
+@if (_customers != null)
+{
+    <ul>
+        @foreach (var customer in _customers)
+        {
+            <li>@customer.FirstName @customer.LastName</li>
+        }
+    </ul>
+}
+
+@code {
+    private IReadOnlyList<Customer> _customers;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _customers = await DataRepository.GetAllCustomersAsync();
+    }
+}

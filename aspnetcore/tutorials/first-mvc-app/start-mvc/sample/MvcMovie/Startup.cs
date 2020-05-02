@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if V1x
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -27,17 +28,16 @@ namespace MvcMovie
         public IConfigurationRoot Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        #region snippet_cs
-
+        #region ConfigureServices
         public void ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
             services.AddMvc();
 
             services.AddDbContext<MvcMovieContext>(options =>
-            #endregion
                     options.UseSqlServer(Configuration.GetConnectionString("MvcMovieContext")));
         }
+        #endregion
 
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -75,3 +75,4 @@ namespace MvcMovie
     }
 }
 #endregion
+#endif

@@ -99,7 +99,7 @@ namespace ContosoUniversity.Controllers
             string sortOrder,
             string currentFilter,
             string searchString,
-            int? page)
+            int? pageNumber)
         {
             ViewData["CurrentSort"] = sortOrder;
             ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
@@ -107,7 +107,7 @@ namespace ContosoUniversity.Controllers
 
             if (searchString != null)
             {
-                page = 1;
+                pageNumber = 1;
             }
             else
             {
@@ -140,7 +140,7 @@ namespace ContosoUniversity.Controllers
             }
 
             int pageSize = 3;
-            return View(await PaginatedList<Student>.CreateAsync(students.AsNoTracking(), page ?? 1, pageSize));
+            return View(await PaginatedList<Student>.CreateAsync(students.AsNoTracking(), pageNumber ?? 1, pageSize));
         }
 #endregion
 #elif (DynamicLinq)
@@ -149,7 +149,7 @@ namespace ContosoUniversity.Controllers
             string sortOrder,
             string currentFilter,
             string searchString,
-            int? page)
+            int? pageNumber)
         {
             ViewData["CurrentSort"] = sortOrder;
             ViewData["NameSortParm"] = 
@@ -159,7 +159,7 @@ namespace ContosoUniversity.Controllers
 
             if (searchString != null)
             {
-                page = 1;
+                pageNumber = 1;
             }
             else
             {
@@ -200,7 +200,7 @@ namespace ContosoUniversity.Controllers
        
             int pageSize = 3;
             return View(await PaginatedList<Student>.CreateAsync(students.AsNoTracking(), 
-                page ?? 1, pageSize));
+                pageNumber ?? 1, pageSize));
         }
 #endregion
 #endif
@@ -218,7 +218,7 @@ namespace ContosoUniversity.Controllers
                 .Include(s => s.Enrollments)
                     .ThenInclude(e => e.Course)
                 .AsNoTracking()
-                .SingleOrDefaultAsync(m => m.ID == id);
+                .FirstOrDefaultAsync(m => m.ID == id);
 
             if (student == null)
             {
@@ -248,7 +248,7 @@ namespace ContosoUniversity.Controllers
                 {
                     _context.Add(student);
                     await _context.SaveChangesAsync();
-                    return RedirectToAction("Index");
+                    return RedirectToAction(nameof(Index));
                 }
             }
             catch (DbUpdateException /* ex */)
@@ -272,7 +272,7 @@ namespace ContosoUniversity.Controllers
 
             var student = await _context.Students
                 .AsNoTracking()
-                .SingleOrDefaultAsync(m => m.ID == id);
+                .FirstOrDefaultAsync(m => m.ID == id);
             if (student == null)
             {
                 return NotFound();
@@ -295,7 +295,7 @@ namespace ContosoUniversity.Controllers
                 {
                     _context.Update(student);
                     await _context.SaveChangesAsync();
-                    return RedirectToAction("Index");
+                    return RedirectToAction(nameof(Index));
                 }
                 catch (DbUpdateException /* ex */)
                 {
@@ -318,7 +318,7 @@ namespace ContosoUniversity.Controllers
             {
                 return NotFound();
             }
-            var studentToUpdate = await _context.Students.SingleOrDefaultAsync(s => s.ID == id);
+            var studentToUpdate = await _context.Students.FirstOrDefaultAsync(s => s.ID == id);
             if (await TryUpdateModelAsync<Student>(
                 studentToUpdate,
                 "",
@@ -327,7 +327,7 @@ namespace ContosoUniversity.Controllers
                 try
                 {
                     await _context.SaveChangesAsync();
-                    return RedirectToAction("Index");
+                    return RedirectToAction(nameof(Index));
                 }
                 catch (DbUpdateException /* ex */)
                 {
@@ -353,7 +353,7 @@ namespace ContosoUniversity.Controllers
 
             var student = await _context.Students
                 .AsNoTracking()
-                .SingleOrDefaultAsync(m => m.ID == id);
+                .FirstOrDefaultAsync(m => m.ID == id);
             if (student == null)
             {
                 return NotFound();
@@ -376,24 +376,22 @@ namespace ContosoUniversity.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var student = await _context.Students
-                .AsNoTracking()
-                .SingleOrDefaultAsync(m => m.ID == id);
+            var student = await _context.Students.FindAsync(id);
             if (student == null)
             {
-                return RedirectToAction("Index");
+                return RedirectToAction(nameof(Index));
             }
 
             try
             {
                 _context.Students.Remove(student);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Index");
+                return RedirectToAction(nameof(Index));
             }
             catch (DbUpdateException /* ex */)
             {
                 //Log the error (uncomment ex variable name and write a log.)
-                return RedirectToAction("Delete", new { id = id, saveChangesError = true });
+                return RedirectToAction(nameof(Delete), new { id = id, saveChangesError = true });
             }
         }
 #endregion
@@ -408,12 +406,12 @@ namespace ContosoUniversity.Controllers
                 Student studentToDelete = new Student() { ID = id };
                 _context.Entry(studentToDelete).State = EntityState.Deleted;
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Index");
+                return RedirectToAction(nameof(Index));
             }
             catch (DbUpdateException /* ex */)
             {
                 //Log the error (uncomment ex variable name and write a log.)
-                return RedirectToAction("Delete", new { id = id, saveChangesError = true });
+                return RedirectToAction(nameof(Delete), new { id = id, saveChangesError = true });
             }
         }
 #endregion

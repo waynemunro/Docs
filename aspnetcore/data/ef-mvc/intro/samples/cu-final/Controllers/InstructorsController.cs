@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,7 +9,6 @@ using ContosoUniversity.Data;
 using ContosoUniversity.Models;
 using ContosoUniversity.Models.SchoolViewModels;
 
-
 namespace ContosoUniversity.Controllers
 {
     public class InstructorsController : Controller
@@ -18,7 +17,7 @@ namespace ContosoUniversity.Controllers
 
         public InstructorsController(SchoolContext context)
         {
-            _context = context;    
+            _context = context;
         }
 
         // GET: Instructors
@@ -65,7 +64,7 @@ namespace ContosoUniversity.Controllers
             }
 
             var instructor = await _context.Instructors
-                .SingleOrDefaultAsync(m => m.ID == id);
+                .FirstOrDefaultAsync(m => m.ID == id);
             if (instructor == null)
             {
                 return NotFound();
@@ -74,6 +73,7 @@ namespace ContosoUniversity.Controllers
             return View(instructor);
         }
 
+        // GET: Instructors/Create
         public IActionResult Create()
         {
             var instructor = new Instructor();
@@ -100,8 +100,9 @@ namespace ContosoUniversity.Controllers
             {
                 _context.Add(instructor);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Index");
+                return RedirectToAction(nameof(Index));
             }
+            PopulateAssignedCourseData(instructor);
             return View(instructor);
         }
 
@@ -117,7 +118,7 @@ namespace ContosoUniversity.Controllers
                 .Include(i => i.OfficeAssignment)
                 .Include(i => i.CourseAssignments).ThenInclude(i => i.Course)
                 .AsNoTracking()
-                .SingleOrDefaultAsync(m => m.ID == id);
+                .FirstOrDefaultAsync(m => m.ID == id);
             if (instructor == null)
             {
                 return NotFound();
@@ -129,7 +130,7 @@ namespace ContosoUniversity.Controllers
         private void PopulateAssignedCourseData(Instructor instructor)
         {
             var allCourses = _context.Courses;
-            var instructorCourses = new HashSet<int>(instructor.CourseAssignments.Select(c => c.Course.CourseID));
+            var instructorCourses = new HashSet<int>(instructor.CourseAssignments.Select(c => c.CourseID));
             var viewModel = new List<AssignedCourseData>();
             foreach (var course in allCourses)
             {
@@ -146,6 +147,7 @@ namespace ContosoUniversity.Controllers
         // POST: Instructors/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int? id, string[] selectedCourses)
@@ -159,7 +161,7 @@ namespace ContosoUniversity.Controllers
                 .Include(i => i.OfficeAssignment)
                 .Include(i => i.CourseAssignments)
                     .ThenInclude(i => i.Course)
-                .SingleOrDefaultAsync(m => m.ID == id);
+                .FirstOrDefaultAsync(m => m.ID == id);
 
             if (await TryUpdateModelAsync<Instructor>(
                 instructorToUpdate,
@@ -182,11 +184,13 @@ namespace ContosoUniversity.Controllers
                         "Try again, and if the problem persists, " +
                         "see your system administrator.");
                 }
-                return RedirectToAction("Index");
+                return RedirectToAction(nameof(Index));
             }
+            UpdateInstructorCourses(selectedCourses, instructorToUpdate);
+            PopulateAssignedCourseData(instructorToUpdate);
             return View(instructorToUpdate);
         }
-
+        
         private void UpdateInstructorCourses(string[] selectedCourses, Instructor instructorToUpdate)
         {
             if (selectedCourses == null)
@@ -212,7 +216,7 @@ namespace ContosoUniversity.Controllers
 
                     if (instructorCourses.Contains(course.CourseID))
                     {
-                        CourseAssignment courseToRemove = instructorToUpdate.CourseAssignments.SingleOrDefault(i => i.CourseID == course.CourseID);
+                        CourseAssignment courseToRemove = instructorToUpdate.CourseAssignments.FirstOrDefault(i => i.CourseID == course.CourseID);
                         _context.Remove(courseToRemove);
                     }
                 }
@@ -228,7 +232,7 @@ namespace ContosoUniversity.Controllers
             }
 
             var instructor = await _context.Instructors
-                .SingleOrDefaultAsync(m => m.ID == id);
+                .FirstOrDefaultAsync(m => m.ID == id);
             if (instructor == null)
             {
                 return NotFound();
@@ -254,7 +258,7 @@ namespace ContosoUniversity.Controllers
             _context.Instructors.Remove(instructor);
 
             await _context.SaveChangesAsync();
-            return RedirectToAction("Index");
+            return RedirectToAction(nameof(Index));
         }
 
         private bool InstructorExists(int id)

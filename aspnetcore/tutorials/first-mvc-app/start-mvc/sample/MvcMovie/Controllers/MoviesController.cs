@@ -222,10 +222,12 @@ namespace MvcMovie.Controllers
             var movies = from m in _context.Movie
                          select m;
 
+            #region snippet_SearchNull2
             if (!String.IsNullOrEmpty(searchString))
             {
                 movies = movies.Where(s => s.Title.Contains(searchString));
             }
+            #endregion
 
             if (!String.IsNullOrEmpty(movieGenre))
             {
@@ -233,8 +235,9 @@ namespace MvcMovie.Controllers
             }
 
             var movieGenreVM = new MovieGenreViewModel();
-            movieGenreVM.genres = new SelectList(await genreQuery.Distinct().ToListAsync());
-            movieGenreVM.movies = await movies.ToListAsync();
+            movieGenreVM.Genres = new SelectList(await genreQuery.Distinct().ToListAsync());
+            movieGenreVM.Movies = await movies.ToListAsync();
+            movieGenreVM.SearchString = searchString;
 
             return View(movieGenreVM);
         }

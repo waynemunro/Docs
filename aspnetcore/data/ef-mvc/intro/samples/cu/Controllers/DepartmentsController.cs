@@ -42,7 +42,7 @@ namespace ContosoUniversity.Controllers
 
             var department = await _context.Departments
                 .AsNoTracking()
-                .SingleOrDefaultAsync(m => m.DepartmentID == id);
+                .FirstOrDefaultAsync(m => m.DepartmentID == id);
             if (department == null)
             {
                 return NotFound();
@@ -64,7 +64,7 @@ namespace ContosoUniversity.Controllers
                 .FromSql(query, id)
                 .Include(d => d.Administrator)
                 .AsNoTracking()
-                .SingleOrDefaultAsync();
+                .FirstOrDefaultAsync();
 
             if (department == null)
             {
@@ -92,7 +92,7 @@ namespace ContosoUniversity.Controllers
             {
                 _context.Add(department);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Index");
+                return RedirectToAction(nameof(Index));
             }
             #region snippet_Dropdown
             ViewData["InstructorID"] = new SelectList(_context.Instructors, "ID", "FullName", department.InstructorID);
@@ -112,7 +112,7 @@ namespace ContosoUniversity.Controllers
             var department = await _context.Departments
                 .Include(i => i.Administrator)
                 .AsNoTracking()
-                .SingleOrDefaultAsync(m => m.DepartmentID == id);
+                .FirstOrDefaultAsync(m => m.DepartmentID == id);
             #endregion
             if (department == null)
             {
@@ -135,7 +135,7 @@ namespace ContosoUniversity.Controllers
                 return NotFound();
             }
 
-            var departmentToUpdate = await _context.Departments.Include(i => i.Administrator).SingleOrDefaultAsync(m => m.DepartmentID == id);
+            var departmentToUpdate = await _context.Departments.Include(i => i.Administrator).FirstOrDefaultAsync(m => m.DepartmentID == id);
 
             if (departmentToUpdate == null)
             {
@@ -157,7 +157,7 @@ namespace ContosoUniversity.Controllers
                 try
                 {
                     await _context.SaveChangesAsync();
-                    return RedirectToAction("Index");
+                    return RedirectToAction(nameof(Index));
                 }
                 catch (DbUpdateConcurrencyException ex)
                 {
@@ -187,7 +187,7 @@ namespace ContosoUniversity.Controllers
                         }
                         if (databaseValues.InstructorID != clientValues.InstructorID)
                         {
-                            Instructor databaseInstructor = await _context.Instructors.SingleOrDefaultAsync(i => i.ID == databaseValues.InstructorID);
+                            Instructor databaseInstructor = await _context.Instructors.FirstOrDefaultAsync(i => i.ID == databaseValues.InstructorID);
                             ModelState.AddModelError("InstructorID", $"Current value: {databaseInstructor?.FullName}");
                         }
 
@@ -218,12 +218,12 @@ namespace ContosoUniversity.Controllers
             var department = await _context.Departments
                 .Include(d => d.Administrator)
                 .AsNoTracking()
-                .SingleOrDefaultAsync(m => m.DepartmentID == id);
+                .FirstOrDefaultAsync(m => m.DepartmentID == id);
             if (department == null)
             {
                 if (concurrencyError.GetValueOrDefault())
                 {
-                    return RedirectToAction("Index");
+                    return RedirectToAction(nameof(Index));
                 }
                 return NotFound();
             }
@@ -255,12 +255,12 @@ namespace ContosoUniversity.Controllers
                     _context.Departments.Remove(department);
                     await _context.SaveChangesAsync();
                 }
-                return RedirectToAction("Index");
+                return RedirectToAction(nameof(Index));
             }
             catch (DbUpdateConcurrencyException /* ex */)
             {
                 //Log the error (uncomment ex variable name and write a log.)
-                return RedirectToAction("Delete", new { concurrencyError = true, id = department.DepartmentID });
+                return RedirectToAction(nameof(Delete), new { concurrencyError = true, id = department.DepartmentID });
             }
         }
         #endregion

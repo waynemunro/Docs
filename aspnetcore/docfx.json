@@ -3,7 +3,8 @@
     "content": [
       {
         "files": [
-          "**/*.md"
+          "**/*.md",
+          "**/*.yml"
         ],
         "exclude": [
           "**/obj/**",
@@ -12,34 +13,93 @@
           "aspnet/**",
           "**/includes/**",
           "**/aspnet-core-conceptual/**",
-          "_site/**"
-        ]
+          "_site/**",
+          "***/readme.md",
+          "***/license.md"
+        ],
+        "group": "group1",
+        "src": "."
       }
     ],
     "resource": [
       {
         "files": [
           "**/*.png",
-          "**/*.jpg"
+          "**/*.jpg",
+          "**/*.gif",
+          "**/*.svg",
+          "**/*.pdf"
         ],
         "exclude": [
           "**/obj/**",
           "aspnet/core/**",
           "**/includes/**",
           "_site/**"
-        ]
+        ],
+        "group": "group1",
+        "src": "."
       }
     ],
     "overwrite": [],
     "externalReference": [],
     "globalMetadata": {
-      "breadcrumb_path": "/aspnet/breadcrumb/toc.json",
       "_navPath": "/foo",
       "_navRel": "/foo",
-      "searchScope": ["ASP.NET Core"]
+      "breadcrumb_path": "/aspnet/core/breadcrumb/toc.json",
+      "extendBreadcrumb": true,
+      "feedback_github_repo": "dotnet/AspNetCore.Docs",
+      "feedback_product_url": "https://github.com/dotnet/aspnetcore/blob/master/CONTRIBUTING.md",
+      "feedback_system": "GitHub",
+      "ms.prod": "aspnet-core",
+      "ms.topic": "conceptual",
+      "uhfHeaderId": [],
+      "searchScope": [
+        "ASP.NET Core"
+      ]
     },
-    "fileMetadata": {},
+    "fileMetadata": {
+      "author": {
+        "whats-new/**/**.md": "scottaddie"
+      },
+      "ms.author": {
+        "whats-new/**/**.md": "scaddie"
+      },
+      "ms.technology": {
+        "azure/**/**.md": "aspnetcore-azure",
+        "client-side/**/**.md": "aspnetcore-clientside",
+        "blazor/**/**.md": "aspnetcore-blazor",
+        "data/**/**.md": "aspnetcore-data",
+        "fundamentals/**/**.md": "aspnetcore-fundamentals",
+        "getting-started/**/**.md": "aspnetcore-getstarted",
+        "grpc/**/**.md": "aspnetcore-grpc",
+        "host-and-deploy/**/**.md": "aspnetcore-hostdeploy",
+        "index.md": "aspnetcore",
+        "migration/**/**.md": "aspnetcore-migration",
+        "mobile/**/**.md": "aspnetcore-mobile",
+        "mvc/**/**.md": "aspnetcore-mvc",
+        "performance/**/**.md": "aspnetcore-performance",
+        "razor-pages/**/**.md": "aspnetcore-razorpages",
+        "release-notes/**/**.md": "aspnetcore-releasenotes",
+        "security/**/**.md": "aspnetcore-security",
+        "signalr/**/**.md": "aspnetcore-signalr",
+        "test/**/**.md": "aspnetcore-test",
+        "tutorials/**/**.md": "aspnetcore-tutorials",
+        "web-api/**/**.md": "aspnetcore-webapi",
+        "whats-new/**/**.md": "aspnetcore-whatsnew"
+      },
+      "ms.topic": {
+        "getting-started/**/**.md": "tutorial",
+        "tutorials/**/**.md": "tutorial"
+      }
+    },
     "template": [],
-    "dest": "_site"
+    "dest": "_site",
+    "markdownEngineName": "markdig",
+    "groups": {
+      "group1": {
+        "dest": "group1-dest",
+        "moniker_range": ">= aspnetcore-1.0"
+      }
+    }
   }
 }
